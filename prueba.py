@@ -1,6 +1,7 @@
 import asyncio
 import aiohttp
 from bs4 import BeautifulSoup
+from functools import partial
 from urllib.parse import urlparse
 from os import sep
 from sys import stderr
@@ -14,13 +15,17 @@ async def wget(session, uri):
         else:
             return await response.read()
 
+def write_in_file(filename, content):
+    with open(filename, 'wb') as f:
+        f.write(content)
+
 async def download(session, uri):
     content = await wget(session, uri)
     if content is None:
         return None
-    with open(uri.split(sep)[-1], 'wb') as f:
-        f.write(content)
-        return uri
+    loop = asyncio.get_running_loop()
+    await loop.run_in_executor(None, partial(write_in_file, uri.split(sep)[-1], content))
+    return uri
 
 async def get_images_src_from_html(html_doc):
     '''
@@ -68,4 +73,4 @@ async def main():
     async with aiohttp.ClientSession() as session:
         await get_images(session, web_page_uri)
 
-asyncio.run(main()) 
+asyncio.run(main())
