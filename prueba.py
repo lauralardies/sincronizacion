@@ -21,19 +21,21 @@ async def download(session, uri):
         f.write(content)
         return uri
 
-def get_images_src_from_html(html_doc):
+async def get_images_src_from_html(html_doc):
     '''
     Recupera todo el contenido de los atributos src de las etiquetas img.
     '''
     soup = BeautifulSoup(html_doc, 'html_parser')
-    return (img.get('scr') for img in soup.find_all('img'))
+    for img in soup.find_all('img'):
+        yield img.get('scr')
+        await asyncio.sleep(0.001)
 
-def get_uri_from_images_src(base_uri, images_src):
+async def get_uri_from_images_src(base_uri, images_src):
     '''
     Devuelve una a una cada URI de la imagen a descargar.
     '''
     parsed_base = urlparse(base_uri)
-    for src in images_src:
+    async for src in images_src:
         parsed = urlparse(src)
         if parsed.netloc == '':
             path = parsed.path
@@ -47,6 +49,7 @@ def get_uri_from_images_src(base_uri, images_src):
             yield parsed_base.scheme + '://' + parsed_base.netloc + path
         else:
             yield parsed.geturl()
+        await asyncio.sleep(0.001)
 
 async def main(uri):
     async with aiohttp.ClientSession() as session:
