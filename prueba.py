@@ -21,6 +21,7 @@ async def wget(session, uri):
 def write_in_file(filename, content):
     '''
     Administra la parte bloqueante.
+    Cualquier otra tarea que esté esperando en la misma tarea se bloqueará hasta que se complete esta tarea.
     '''
     with open(filename, 'wb') as f:
         f.write(content)
