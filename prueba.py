@@ -51,8 +51,8 @@ async def get_uri_from_images_src(base_uri, images_src):
     '''
     Devuelve una a una cada URI de la imagen a descargar.
     '''
-    parsed_base = urlparse(base_uri)
-    async for src in images_src:
+    parsed_base = urlparse(base_uri) # Analizamos 'base_uri'.
+    async for src in images_src: # Cada elemento de images_src se analiza con urlparse().
         parsed = urlparse(src)
         if parsed.netloc == '':
             path = parsed.path
@@ -66,24 +66,24 @@ async def get_uri_from_images_src(base_uri, images_src):
             yield parsed_base.scheme + '://' + parsed_base.netloc + path
         else:
             yield parsed.geturl()
-        await asyncio.sleep(0.001)
+        await asyncio.sleep(0.001) # Permitimos que otros procesos se ejecuten mientras se esperan las operaciones de entrada/salida (I/O).
 
 async def get_images(session, page_uri):
     '''
     Recuperación de las URI de todas las imágenes de una página.
     '''
-    html = await wget(session, page_uri)
+    html = await wget(session, page_uri) # Recuperamos el HTML de la página.
     if not html: # Entra en el if si la función wget no encuentra nada.
         print('Error: No se ha encontrado ninguna imagen', stderr) 
         return None
     '''
     Recuperación de las imágenes.
     '''
-    images_src_gen = get_images_src_from_html(html)
-    images_uri_gen = get_uri_from_images_src(page_uri, images_src_gen)
+    images_src_gen = get_images_src_from_html(html) # Extraemos etiquetas de la imagen.
+    images_uri_gen = get_uri_from_images_src(page_uri, images_src_gen) # Generamos una lista de URLs de imágenes.
     async for image_uri in images_uri_gen:
         print('Descarga de %s' % image_uri)
-        await download(session, image_uri)
+        await download(session, image_uri) # Descargamos cada imagen y la guardamos en el disco.
 
 async def main():
     web_page_uri = 'http://www.formation-python.com/'
