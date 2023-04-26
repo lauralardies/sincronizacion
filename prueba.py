@@ -30,12 +30,13 @@ async def download(session, uri):
     '''
     Guardar en disco duro un archivo designado por una URI.
     '''
-    content = await wget(session, uri)
+    content = await wget(session, uri) # Descarga de un archivo desde una URL determinada.
     if content is None:
         return None
     loop = asyncio.get_running_loop()
+    # Como write_in_file es bloqueante (función anterior) --> Empleamos run_in_executor para ejecutarla en subproceso.
     await loop.run_in_executor(None, partial(write_in_file, uri.split(sep)[-1], content))
-    return uri
+    return uri # Devolvemos la URL de la descarga completada.
 
 async def get_images_src_from_html(html_doc):
     '''
