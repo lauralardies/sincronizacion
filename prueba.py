@@ -42,10 +42,10 @@ async def get_images_src_from_html(html_doc):
     '''
     Recupera todo el contenido de los atributos src de las etiquetas img.
     '''
-    soup = BeautifulSoup(html_doc, 'html.parser')
+    soup = BeautifulSoup(html_doc, 'html.parser') # Para analizar HTML.
     for img in soup.find_all('img'):
-        yield img.get('scr')
-        await asyncio.sleep(0.001)
+        yield img.get('scr') # Devuelve cada URL de imagen individualmente.
+        await asyncio.sleep(0.001) # Evitamos bloqueos.
 
 async def get_uri_from_images_src(base_uri, images_src):
     '''
