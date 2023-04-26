@@ -1,8 +1,8 @@
-import asyncio
-import aiohttp
-from bs4 import BeautifulSoup
+import asyncio # Módulo para trabajar de manera asíncrona.
+import aiohttp # Para hacer solicitudes HTTP.
+from bs4 import BeautifulSoup # Para analizar HTML.
 from functools import partial
-from urllib.parse import urlparse
+from urllib.parse import urlparse #Para anañizar URLs.
 from os import sep
 from sys import stderr
 
@@ -11,11 +11,11 @@ async def wget(session, uri):
     Devuelve el contenido designado por una URI.
     '''
     async with session.get(uri) as response:
-        if response.status != 200:
+        if response.status != 200: # Respuesta distinta a 200 --> Devolvemos None.
             return None
-        if response.content_type.startswith('text/'):
+        if response.content_type.startswith('text/'): # Contenido de la respuesta comienza por 'text/' --> Devolvemos el contenido como string.
             return await response.text()
-        else:
+        else: # Si el contenido no comienza por 'text/' --> Devolvemos el contenido como bytes.
             return await response.read()
 
 def write_in_file(filename, content):
@@ -71,8 +71,8 @@ async def get_images(session, page_uri):
     Recuperación de las URI de todas las imágenes de una página.
     '''
     html = await wget(session, page_uri)
-    if not html:
-        print('Error: No se ha encontrado ninguna imagen', stderr)
+    if not html: # Entra en el if si la función wget no encuentra nada.
+        print('Error: No se ha encontrado ninguna imagen', stderr) 
         return None
     '''
     Recuperación de las imágenes.
@@ -85,7 +85,7 @@ async def get_images(session, page_uri):
 
 async def main():
     web_page_uri = 'http://www.formation-python.com/'
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession() as session: # ClientSession se recomienda como interfaz para realizar solicitudes HTTP.
         await get_images(session, web_page_uri)
 
 if __name__ == '__main__':
