@@ -10,6 +10,7 @@ async def wget(session, uri):
     '''
     Devuelve el contenido designado por una URI.
     '''
+
     async with session.get(uri) as response:
         if response.status != 200: # Respuesta distinta a 200 --> Devolvemos None.
             return None
