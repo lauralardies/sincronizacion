@@ -4,7 +4,9 @@ Mi dirección de GitHub para este repositorio es la siguiente: [GitHub](https://
 https://github.com/lauralardies/sincronizacion
 
 ## Breve introducción
-En este ejercicio estamos implementando en Python un código para descargar imágenes de una página web y descargarlas en el disco.
+En este ejercicio estamos implementando en Python un código para descargar imágenes de una página web (¡Importante! Debes de tener en cuenta que sólo analizamos páginas web HTTP) y descargarlas en el disco.
+
+Nuestro código no muestra nada en pantalla al terminar de ejecutarse debido a que la página web que estamos analizando no cuenta con ninguna imagen.
 
 ## Código `main.py`
 ```
